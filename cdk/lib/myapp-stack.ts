@@ -4,6 +4,8 @@ import * as apiGateway from '@aws-cdk/aws-apigateway';
 import * as path from 'path';
 
 export class MyAppStack extends cdk.Stack {
+  urlOutput: cdk.CfnOutput;
+
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -17,5 +19,7 @@ export class MyAppStack extends cdk.Stack {
       requestTemplates: { 'application/json': JSON.stringify({ statusCode: 200 }) },
     });
     api.root.addMethod('GET', apiIntegration);
+
+    this.urlOutput = new cdk.CfnOutput(this, 'ApiUrl', { value: api.url });
   }
 }

@@ -1,0 +1,1 @@
+console.log("Testing API ", process.env.SERVICE_URL);

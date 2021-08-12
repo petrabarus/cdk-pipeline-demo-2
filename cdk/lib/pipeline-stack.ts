@@ -52,6 +52,27 @@ export class PipelineStack extends cdk.Stack {
         //PRE-PROD
         const preProdApp = new MyAppStackStage(this, 'PreProd');
         const preProdStage = pipeline.addApplicationStage(preProdApp);
+        
+        //Integration test
+        const serviceUrl = pipeline.stackOutput(preProdApp.urlOutput);
+        const integrationAction = new pipelines.ShellScriptAction({
+            actionName: 'IntegrationTest',
+            runOrder: preProdStage.nextSequentialRunOrder(),
+            additionalArtifacts: [
+                sourceArtifact
+            ],
+            commands: [
+                'cd lambda',
+                'npm install',
+                'npm run build',
+                'npm run integration_test',
+            ],
+            useOutputs: {
+                SERVICE_URL: serviceUrl,
+            }
+        });
+        preProdStage.addActions(integrationAction);
+        
         //PROD
         const prodApp = new MyAppStackStage(this, 'Prod');
         const prodStage = pipeline.addApplicationStage(prodApp);

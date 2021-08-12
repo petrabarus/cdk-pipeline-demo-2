@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "integration_test": "node ./test/integration.test.js"
   },
   "keywords": [],
   "author": "",
